@@ -17,35 +17,35 @@
                             <tr>                
                                 @foreach($butacas_fila_1 as $key=>$value)
                                     <td>{{ $value }}
-                                        <input name="butacas[]" type="checkbox" value="{{ $value }}" id="{{ $key }}" class="checkbox"> 
+                                        <input name="butacas[]" type="checkbox" value="{{ $value }}" id="{{ $value }}" class="checkbox" onclick="check('{{ $butacas }}');"> 
                                     </td>
                                 @endforeach
                             </tr>
                             <tr>                
                                 @foreach($butacas_fila_2 as $key=>$value)
                                     <td>{{ $value }}
-                                        <input name="butacas[]" type="checkbox" value="{{ $value }}" id="{{ $key }}" class="checkbox"> 
+                                        <input name="butacas[]" type="checkbox" value="{{ $value }}" id="{{ $value }}" class="checkbox"> 
                                     </td>
                                 @endforeach
                             </tr>
                             <tr>                
                                 @foreach($butacas_fila_3 as $key=>$value)
                                     <td>{{ $value }}
-                                        <input name="butacas[]" type="checkbox" value="{{ $value }}" id="{{ $key }}" class="checkbox"> 
+                                        <input name="butacas[]" type="checkbox" value="{{ $value }}" id="{{ $value }}" class="checkbox"> 
                                     </td>
                                 @endforeach
                             </tr>
                             <tr>                
                                 @foreach($butacas_fila_4 as $key=>$value)
                                     <td>{{ $value }}
-                                        <input name="butacas[]" type="checkbox" value="{{ $value }}" id="{{ $key }}" class="checkbox"> 
+                                        <input name="butacas[]" type="checkbox" value="{{ $value }}" id="{{ $value }}" class="checkbox"> 
                                     </td>
                                 @endforeach
                             </tr>
                             <tr>                
                                 @foreach($butacas_fila_5 as $key=>$value)
                                     <td>{{ $value }}
-                                        <input name="butacas[]" type="checkbox" value="{{ $value }}" id="{{ $key }}" class="checkbox"> 
+                                        <input name="butacas[]" type="checkbox" value="{{ $value }}" id="{{ $value }}" class="checkbox"> 
                                     </td>
                                 @endforeach
                             </tr>
@@ -74,7 +74,7 @@
     </div>
 </div>
 <script type="text/javascript">
-$('#1').prop('checked')
+
     $(function(){
         $('#form').validator().on('submit', function (e) {
             if (!e.isDefaultPrevented()){
@@ -103,16 +103,17 @@ $('#1').prop('checked')
                             text: data.msg,
                             type: 'success'
                             //timer: '4500'
-                        })
+                        });
+                    window.setTimeout(function(){location.reload()},4500)
                     },
                     error : function(data){
                     $("#btnsend").prop('disabled', false); 
                         swal({
-                            title: 'Error en el proceso...',
-                            text: data.msg,
-                            type: 'error'
-                            //timer: '4500'
-                        })
+                            title: 'Error...',
+                            text: 'Debe seleccionar al menos una butaca..',
+                            type: 'error',
+                            timer: '1500'
+                        });
                     }
                 });
                 return false;
@@ -121,34 +122,25 @@ $('#1').prop('checked')
     });
 
 
-
-    $('.checkbox').each(function(){
-
-        $(this).hide().after('<div class="class_checkbox" />');
-
-    });
-
-    $('.class_checkbox').on('click',function(){
+    $('.checkbox').on('click',function(){
 
        $(this).toggleClass('checked').prev().prop('checked',$(this).is('.checked'));
 
     });
 
-    function Program(butacas){
 
+    function check(butacas){
         var butacasArr  = butacas.split(",");
         var butacasJSON = JSON.stringify(butacasArr);
-
         $('.checkbox').filter(function () {    
           if (butacasJSON.indexOf(this.id) != -1)
                 return $(this).closest('td').find(':checkbox');
-        }).prop("checked", true);
-
+        }).attr({'checked': 'checked', 'disabled': 'disabled'});
     }
 
     $(document).ready(function(){
 
-       //
+       check('{{ $butacas }}');
 
     });
 

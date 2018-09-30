@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Reserva;
+use App\Control;
 use Illuminate\Http\Request;
 use GrahamCampbell\Flysystem\Facades\Flysystem;
 use Storage;
@@ -32,7 +33,15 @@ class ReservaController extends Controller
 
         $id = $user->id;
         
-        $butacas = DB::table('reservas')->select('butacas')->where('usuario', $id)->first();
+        $butacas  = Control::all();
+ 
+        foreach ($butacas as $key=>$value) {
+  
+            $a[] = $value->butacas;
+  
+        }
+
+        $butacas = implode(", ", $a);
 
         $butacas_fila_1 = array(
           '1' => 'A1', '2' => 'B1', '3' => 'C1', '4' => 'D1', '5' => 'E1', '6' => 'F1', '7' => 'G1', '8' => 'H1', '9' => 'I1', '10' => 'J1' 
@@ -73,6 +82,11 @@ class ReservaController extends Controller
     public function store(Request $request)
     {
         if($request->ajax()){
+
+            $user = Auth::user();
+    
+            $name = $user->name;
+
             //=====================================================================
             //checkboxs butacas
             //=====================================================================
@@ -88,10 +102,16 @@ class ReservaController extends Controller
                 $reservacion->fecha    = $request->fecha;
                 $reservacion->usuario  = $request->usuario;
                 $reservacion->butacas  = $butacas;
-                $reservacion->save();
             
-                // log text file
+		            if ( $reservacion->save()) {
+						foreach ($request->butacas as $key => $value) {
+							$data  = array('butacas' => $request->butacas[$key]);
+							Control::insert($data);
+						}
+		            }
 
+
+                // log text file
                 $exists = Storage::exists('teatro_log.txt');
                 if (isset($exists)) {
 
@@ -104,7 +124,7 @@ class ReservaController extends Controller
                 //end text log file
             
                 return response()->json([
-                    "msg" => "Reservación creada para las butacas: ".$butacas, "reservacion"=> $reservacion
+                    "msg" => "Reservación creada para las butacas: ".$butacas." del usuario ".$name, "reservacion"=> $reservacion
                 ]);
 
         }

@@ -22,19 +22,19 @@
 
 </head>
 <style type="text/css">
-    .class_checkbox {
+    .checkbox {
         width: 40px;  
         height: 40px;
         border-radius: 5px;
         background-color: red;
-        opacity: 0.5; 
+        opacity: 0.9; 
         background-image: url("template/assets/images/cinema.png");
         background-repeat: no-repeat;
         background-size: 30px 30px;
         background-position: center;
         cursor: pointer;
     }
-    .class_checkbox.checked {
+    .checkbox.checked {
         background-color: green;
     }
 </style>
